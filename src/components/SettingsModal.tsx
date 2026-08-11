@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Bell, Send, CheckCircle2, AlertTriangle, Loader2, ShieldCheck, Coins, Download } from 'lucide-react';
-import { openInstallSettings, canInstallApks } from '../local/apk-installer';
+import { openInstallSettings, canInstallApks, downloadAndInstallApk } from '../local/apk-installer';
 import { checkForUpdate, UpdateInfo } from '../local/update-checker';
 import { App as CapacitorApp } from '@capacitor/app';
 import { AppSettings, WebhookTestResult } from '../types';
@@ -27,6 +27,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
   const [updateCheckState, setUpdateCheckState] = useState<'idle' | 'checking' | 'done'>('idle');
   const [updateCheckResult, setUpdateCheckResult] = useState<UpdateInfo | null>(null);
   const [currentVersion, setCurrentVersion] = useState('');
+  const [installing, setInstalling] = useState(false);
   const [testResult, setTestResult] = useState<WebhookTestResult | null>(null);
   const modalRef = React.useRef<HTMLDivElement>(null);
 
@@ -274,15 +275,49 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             </div>
             {updateCheckState === 'done' && updateCheckResult && (
               <div
-                className={`px-3 py-2 rounded-lg text-[11px] font-semibold border ${
+                className={`px-3 py-2.5 rounded-lg text-[11px] font-semibold border ${
                   updateCheckResult.available
                     ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300'
                     : 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
                 }`}
               >
-                {updateCheckResult.available
-                  ? `Update tersedia: v${updateCheckResult.latestVersion} — tutup settings lalu klik banner "Update".`
-                  : `Sudah versi terbaru${updateCheckResult.latestVersion ? ` (v${updateCheckResult.latestVersion})` : ''}.`}
+                {updateCheckResult.available ? (
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="flex-1 min-w-0">
+                      Update tersedia: v{updateCheckResult.latestVersion}
+                      {updateCheckResult.notes && (
+                        <span className="block font-normal truncate mt-0.5">{updateCheckResult.notes}</span>
+                      )}
+                    </span>
+                    <button
+                      type="button"
+                      disabled={installing}
+                      onClick={async () => {
+                        if (!updateCheckResult.downloadUrl) return;
+                        const allowed = await canInstallApks();
+                        if (!allowed) {
+                          setInstallPermNote('Aktifkan "Izinkan dari sumber ini" untuk update.');
+                          openInstallSettings().catch(() => {});
+                          return;
+                        }
+                        setInstalling(true);
+                        try {
+                          await downloadAndInstallApk(updateCheckResult.downloadUrl);
+                        } catch (err: any) {
+                          setInstallPermNote(`Gagal mengunduh update: ${err.message}`);
+                          setTimeout(() => setInstallPermNote(null), 6000);
+                        } finally {
+                          setInstalling(false);
+                        }
+                      }}
+                      className="shrink-0 px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-white text-xs font-bold transition shadow disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {installing ? 'Mengunduh...' : 'Update'}
+                    </button>
+                  </div>
+                ) : (
+                  `Sudah versi terbaru${updateCheckResult.latestVersion ? ` (v${updateCheckResult.latestVersion})` : ''}.`
+                )}
               </div>
             )}
 
