@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Bell, Send, CheckCircle2, AlertTriangle, Loader2, ShieldCheck, Coins, Download } from 'lucide-react';
+import { openInstallSettings, canInstallApks } from '../local/apk-installer';
 import { AppSettings, WebhookTestResult } from '../types';
 
 interface SettingsModalProps {
@@ -20,6 +21,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
   const [loading, setLoading] = useState(false);
   const [testing, setTesting] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [installPermNote, setInstallPermNote] = useState<string | null>(null);
   const [testResult, setTestResult] = useState<WebhookTestResult | null>(null);
 
   useEffect(() => {
@@ -236,6 +238,36 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 Kosongkan untuk menonaktifkan.
               </p>
             </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const allowed = await canInstallApks();
+                    if (allowed) {
+                      setInstallPermNote('Izin install sudah aktif — update dapat berjalan.');
+                      setTimeout(() => setInstallPermNote(null), 4000);
+                      return;
+                    }
+                    openInstallSettings().catch(() => {});
+                  } catch {
+                    openInstallSettings().catch(() => {});
+                  }
+                }}
+                className="px-3.5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-bold transition shadow-md"
+              >
+                Atur izin install APK
+              </button>
+              <span className="text-[10px] theme-text-muted">
+                Buka layar "Install unknown apps" untuk app ini secara langsung.
+              </span>
+            </div>
+            {installPermNote && (
+              <div className="px-3 py-2 rounded-lg text-[11px] font-semibold bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300">
+                {installPermNote}
+              </div>
+            )}
           </div>
 
           <hr className="theme-border" />
