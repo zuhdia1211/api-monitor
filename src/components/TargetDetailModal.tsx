@@ -139,7 +139,7 @@ export const TargetDetailModal: React.FC<TargetDetailModalProps> = ({ target, on
         </div>
 
         {/* Content Body */}
-        <div className="p-6 text-xs max-h-[70vh] overflow-y-auto">
+        <div className="p-6 text-xs">
           {activeTab === 'overview' && (
             <div className="space-y-6">
               {/* Uptime History Bar Grid */}

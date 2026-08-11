@@ -230,7 +230,7 @@ export const TargetCard: React.FC<TargetCardProps> = ({
             </button>
 
             {expandedModels && (
-              <div className="divide-y theme-border max-h-60 overflow-y-auto text-xs">
+              <div className="divide-y theme-border text-xs">
                 {lastResult.modelResults.filter((model, i, arr) => arr.findIndex((m) => m.modelId === model.modelId) === i).map((model) => {
                   const isOp = model.status === 'operational';
                   const pending = !isSettledStatus(model.status);
