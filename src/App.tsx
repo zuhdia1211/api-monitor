@@ -475,9 +475,9 @@ export default function App() {
     <div
       className="theme-bg-app theme-text-main font-sans antialiased transition-colors h-dvh flex flex-col overflow-hidden"
     >
-      {/* Toast Notification Banner */}
+      {/* Toast Notification Banner — top center, out of the way of the content. */}
       {toast && (
-        <div className="fixed right-6 z-50 animate-bounce top-[calc(env(safe-area-inset-top,0px)+5rem)]">
+        <div className="fixed left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-lg top-[calc(env(safe-area-inset-top,0px)+5rem)]">
           <div
             className={`flex items-center space-x-2 px-4 py-3 rounded-2xl border shadow-2xl text-xs font-semibold ${
               toast.type === 'success'

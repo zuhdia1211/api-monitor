@@ -54,7 +54,9 @@ const ColumnFilter: React.FC<{
 }> = ({ value, onChange, placeholder, options }) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -64,6 +66,15 @@ const ColumnFilter: React.FC<{
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  // Recompute the fixed position when it opens so the popup is never clipped
+  // by the horizontal scroll container the table lives in.
+  useEffect(() => {
+    if (open && btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      setMenuPos({ top: r.bottom + 4, left: r.left });
+    }
+  }, [open]);
+
   const filteredOptions = options.filter((opt) =>
     opt.toLowerCase().includes(search.toLowerCase())
   );
@@ -71,14 +82,19 @@ const ColumnFilter: React.FC<{
   return (
     <div ref={ref} className="relative">
       <button
+        ref={btnRef}
         onClick={(e) => { e.stopPropagation(); setOpen(!open); if (!open) setSearch(''); }}
         className={`p-0.5 rounded transition ${value ? 'text-indigo-500' : 'theme-text-muted hover:theme-text-main'}`}
         title="Filter column"
       >
         <Filter className="w-3 h-3" />
       </button>
-      {open && (
-        <div className="absolute top-full left-0 mt-1 z-30 theme-bg-card border theme-border rounded-xl shadow-xl p-2 min-w-[220px] max-w-[300px]" onClick={(e) => e.stopPropagation()}>
+      {open && menuPos && (
+        <div
+          style={{ position: 'fixed', top: menuPos.top, left: menuPos.left }}
+          className="z-50 theme-bg-card border theme-border rounded-xl shadow-xl p-2 w-[min(300px,calc(100vw-1.5rem))]"
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Search input */}
           <div className="flex items-center space-x-1.5 mb-1.5 border-b theme-border pb-1.5">
             <Search className="w-3 h-3 theme-text-muted flex-shrink-0" />
@@ -334,11 +350,11 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
         </div>
       </div>
 
-      {/* Table — header and its filters stay mounted even when nothing matches,
-          otherwise an over-narrow filter would hide the controls needed to undo it. */}
+      {/* Table — one table (header + rows) in a single horizontal scroll
+          container, so the column headers follow the detail rows when the
+          user swipes left/right, exactly like the endpoint monitor. */}
       <div className="theme-bg-card border theme-border rounded-2xl shadow-sm transition-colors overflow-hidden">
-          {/* Column Headers — outside scroll, overflow visible for dropdowns */}
-          <div className="relative z-20 overflow-visible">
+        <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse table-fixed min-w-[900px]">
               <colgroup>
                 <col style={{ width: '14%' }} />
@@ -378,22 +394,6 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
                   <th className="p-3 text-center rounded-tr-2xl">Actions</th>
                 </tr>
               </thead>
-            </table>
-          </div>
-
-          {/* Body — only the detail rows scroll horizontally, matching the
-              endpoint monitor; the header above stays put. */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse table-fixed min-w-[900px]">
-              <colgroup>
-                <col style={{ width: '14%' }} />
-                <col style={{ width: '22%' }} />
-                <col style={{ width: '12%' }} />
-                <col style={{ width: '10%' }} />
-                <col style={{ width: '20%' }} />
-                <col style={{ width: '12%' }} />
-                <col style={{ width: '10%' }} />
-              </colgroup>
               <tbody className="divide-y theme-border">
                 {sorted.length === 0 && (
                   <tr>
@@ -485,7 +485,7 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
               </tbody>
             </table>
           </div>
-        </div>
+      </div>
     </div>
   );
 };
