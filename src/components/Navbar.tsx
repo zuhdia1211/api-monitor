@@ -146,7 +146,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {themeMenuOpen && (
-              <div className="absolute right-0 mt-2 w-64 theme-bg-card border theme-border rounded-2xl shadow-2xl p-2 z-50 text-xs space-y-1">
+              <div className="absolute right-0 mt-2 w-64 theme-bg-card border theme-border rounded-2xl shadow-2xl p-2 z-50 text-xs space-y-1 max-h-[70dvh] overflow-y-auto">
                 <div className="px-3 py-1.5 font-mono font-bold text-[10px] uppercase tracking-wider theme-text-muted border-b theme-border mb-1 flex items-center justify-between">
                   <span>Pilih Tema (Theme Presets)</span>
                 </div>
@@ -218,7 +218,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {timingMenuOpen && (
-              <div className="absolute right-0 mt-2 w-72 theme-bg-card border theme-border rounded-2xl shadow-2xl p-2.5 z-50 text-xs space-y-2">
+              <div className="absolute right-0 mt-2 w-72 theme-bg-card border theme-border rounded-2xl shadow-2xl p-2.5 z-50 text-xs space-y-2 max-h-[70dvh] overflow-y-auto">
                 {/* Option 1: Off (Manual Only) */}
                 <button
                   onClick={() => {
