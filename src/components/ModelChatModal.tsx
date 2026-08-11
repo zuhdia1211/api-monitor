@@ -83,7 +83,7 @@ export const ModelChatModal: React.FC<ModelChatModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[60] flex justify-center items-start p-4 pt-[calc(env(safe-area-inset-top,0px)+2rem)] bg-black/60 backdrop-blur-sm">
       <div className="theme-bg-card border theme-border rounded-2xl w-full max-w-2xl shadow-2xl flex flex-col h-[80vh] max-h-[700px] theme-text-main transition-colors">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-3 border-b theme-border theme-bg-subtle rounded-t-2xl">

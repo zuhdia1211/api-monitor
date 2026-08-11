@@ -91,7 +91,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex justify-center items-start bg-black/60 backdrop-blur-sm p-4 pt-[calc(env(safe-area-inset-top,0px)+2rem)] overflow-y-auto">
       <div className="theme-bg-card border theme-border rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden theme-text-main my-8 transition-colors">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b theme-border theme-bg-subtle">

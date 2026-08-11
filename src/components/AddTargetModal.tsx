@@ -159,7 +159,7 @@ export const AddTargetModal: React.FC<AddTargetModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex justify-center items-start p-4 pt-[calc(env(safe-area-inset-top,0px)+2rem)] bg-black/60 backdrop-blur-md overflow-y-auto">
       <div className="theme-bg-card theme-border border rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden my-8 theme-text-main transition-colors">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b theme-border theme-bg-subtle">

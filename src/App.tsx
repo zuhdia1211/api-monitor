@@ -477,7 +477,7 @@ export default function App() {
     >
       {/* Toast Notification Banner */}
       {toast && (
-        <div className="fixed top-20 right-6 z-50 animate-bounce">
+        <div className="fixed right-6 z-50 animate-bounce top-[calc(env(safe-area-inset-top,0px)+5rem)]">
           <div
             className={`flex items-center space-x-2 px-4 py-3 rounded-2xl border shadow-2xl text-xs font-semibold ${
               toast.type === 'success'
@@ -499,7 +499,7 @@ export default function App() {
 
       {/* Update Available Banner */}
       {updateInfo && !updateDismissed && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-lg">
+        <div className="fixed left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-lg top-[calc(env(safe-area-inset-top,0px)+5rem)]">
           <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border shadow-2xl text-xs font-semibold bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-200 border-amber-300 dark:border-amber-800">
             <Download className="w-4 h-4 text-amber-500 shrink-0" />
             <div className="flex-1 min-w-0">
