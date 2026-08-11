@@ -112,14 +112,14 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="theme-bg-header border-b theme-border sticky top-0 z-30 backdrop-blur-md transition-colors theme-text-main">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
-        <div className="flex items-center space-x-3.5">
-          <div className="p-2 theme-bg-subtle border theme-border rounded-xl relative group shadow-sm">
+        <div className="flex items-center space-x-3.5 min-w-0">
+          <div className="p-2 theme-bg-subtle border theme-border rounded-xl relative group shadow-sm flex-shrink-0">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-300" />
             <Activity className="w-5 h-5 text-cyan-500 relative z-10" />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="font-extrabold theme-text-main text-base tracking-tight">
+              <h1 className="font-extrabold theme-text-main text-base tracking-tight truncate">
                 API <span className="text-cyan-500">&amp;</span> LLM Pulse
               </h1>
             </div>
@@ -130,9 +130,9 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center space-x-2 sm:space-x-3">
+        <div className="relative flex items-center space-x-1.5 sm:space-x-3 flex-nowrap min-w-0">
           {/* Theme Preset Selector Dropdown */}
-          <div className="relative" ref={themeMenuRef}>
+          <div className="flex-shrink-0" ref={themeMenuRef}>
             <button
               onClick={() => {
                 setThemeMenuOpen(!themeMenuOpen);
@@ -146,7 +146,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {themeMenuOpen && (
-              <div className="absolute right-0 mt-2 w-64 theme-bg-card border theme-border rounded-2xl shadow-2xl p-2 z-50 text-xs space-y-1 max-h-[70dvh] overflow-y-auto">
+              <div className="absolute right-0 top-full mt-2 w-64 max-w-[calc(100vw-1rem)] theme-bg-card border theme-border rounded-2xl shadow-2xl p-2 z-50 text-xs space-y-1 max-h-[70dvh] overflow-y-auto">
                 <div className="px-3 py-1.5 font-mono font-bold text-[10px] uppercase tracking-wider theme-text-muted border-b theme-border mb-1 flex items-center justify-between">
                   <span>Pilih Tema (Theme Presets)</span>
                 </div>
@@ -201,7 +201,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* COMBINED SINGLE POPUP MENU: Polling Interval & Request Timeout */}
-          <div className="relative" ref={timingMenuRef}>
+          <div className="flex-shrink-0" ref={timingMenuRef}>
             <button
               onClick={() => {
                 setTimingMenuOpen(!timingMenuOpen);
@@ -211,14 +211,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl theme-bg-subtle hover:opacity-80 theme-text-main border theme-border transition text-xs font-semibold"
             >
               <SlidersHorizontal className="w-4 h-4 text-cyan-500" />
-              <span>
+              <span className="hidden sm:inline">
                 {autoRefreshInterval === 0 ? 'Manual' : `${autoRefreshInterval >= 60 ? `${autoRefreshInterval / 60}m` : `${autoRefreshInterval}s`}`} / {formatTimeoutBadge(requestTimeoutMs)}
               </span>
 
             </button>
 
             {timingMenuOpen && (
-              <div className="absolute right-0 mt-2 w-72 theme-bg-card border theme-border rounded-2xl shadow-2xl p-2.5 z-50 text-xs space-y-2 max-h-[70dvh] overflow-y-auto">
+              <div className="absolute right-0 top-full mt-2 w-72 max-w-[calc(100vw-1rem)] theme-bg-card border theme-border rounded-2xl shadow-2xl p-2.5 z-50 text-xs space-y-2 max-h-[70dvh] overflow-y-auto">
                 {/* Option 1: Off (Manual Only) */}
                 <button
                   onClick={() => {
@@ -313,7 +313,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/20 transition border border-rose-500/50"
             >
               <Square className="w-3.5 h-3.5" />
-              <span>Stop All</span>
+              <span className="hidden sm:inline">Stop All</span>
             </button>
           ) : (
             <button
@@ -321,7 +321,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition border border-indigo-500/50"
             >
               <Zap className="w-3.5 h-3.5 text-amber-300" />
-              <span>Run All Checks</span>
+              <span className="hidden sm:inline">Run All Checks</span>
             </button>
           )}
 
