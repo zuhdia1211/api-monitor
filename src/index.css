@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+/* Keep the WebView pinned to the device viewport: no pinch zoom, no
+   horizontal drift. */
+html, body {
+  overflow-x: hidden;
+  touch-action: pan-y;
+  overscroll-behavior: none;
+}
+
+/* Android 15 enforces edge-to-edge: the WebView draws behind the transparent
+   status bar, so the sticky header would sit under the notch. Offset it by the
+   system inset so every control stays tappable. */
+header.theme-bg-header {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+:root,
+[data-theme="light-slate"] {
+  --bg-app: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-header: rgba(255, 255, 255, 0.95);
+  --bg-subtle: #f1f5f9;
+  --bg-input: #f8fafc;
+  --border-color: #e2e8f0;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-sub: #334155;
+  color-scheme: light;
+}
+
+[data-theme="nord-light"] {
+  --bg-app: #f0f9ff;
+  --bg-card: #ffffff;
+  --bg-header: rgba(255, 255, 255, 0.95);
+  --bg-subtle: #e0f2fe;
+  --bg-input: #f0f9ff;
+  --border-color: #bae6fd;
+  --text-main: #0c4a6e;
+  --text-muted: #0369a1;
+  --text-sub: #0284c7;
+  color-scheme: light;
+}
+
+[data-theme="mint-light"] {
+  --bg-app: #ecfdf5;
+  --bg-card: #ffffff;
+  --bg-header: rgba(255, 255, 255, 0.95);
+  --bg-subtle: #d1fae5;
+  --bg-input: #ecfdf5;
+  --border-color: #a7f3d0;
+  --text-main: #064e3b;
+  --text-muted: #047857;
+  --text-sub: #059669;
+  color-scheme: light;
+}
+
+[data-theme="dark-slate"] {
+  --bg-app: #030712;
+  --bg-card: #0f172a;
+  --bg-header: rgba(15, 23, 42, 0.95);
+  --bg-subtle: #1e293b;
+  --bg-input: #020617;
+  --border-color: #334155;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-sub: #cbd5e1;
+  color-scheme: dark;
+}
+
+[data-theme="midnight"] {
+  --bg-app: #090d16;
+  --bg-card: #131b2e;
+  --bg-header: rgba(19, 27, 46, 0.95);
+  --bg-subtle: #1d283d;
+  --bg-input: #0b1120;
+  --border-color: #283754;
+  --text-main: #f0f6ff;
+  --text-muted: #8ea5c8;
+  --text-sub: #cbd5e1;
+  color-scheme: dark;
+}
+
+[data-theme="cyberpunk"] {
+  --bg-app: #09090b;
+  --bg-card: #18181b;
+  --bg-header: rgba(24, 24, 27, 0.95);
+  --bg-subtle: #27272a;
+  --bg-input: #09090b;
+  --border-color: #3f3f46;
+  --text-main: #fafafa;
+  --text-muted: #a1a1aa;
+  --text-sub: #d4d4d8;
+  color-scheme: dark;
+}
+
+.theme-bg-app {
+  background-color: var(--bg-app);
+}
+
+.theme-bg-card {
+  background-color: var(--bg-card);
+}
+
+.theme-bg-header {
+  background-color: var(--bg-header);
+}
+
+.theme-bg-subtle {
+  background-color: var(--bg-subtle);
+}
+
+.theme-bg-input {
+  background-color: var(--bg-input);
+}
+
+.theme-border {
+  border-color: var(--border-color);
+}
+
+.theme-text-main {
+  color: var(--text-main);
+}
+
+.theme-text-muted {
+  color: var(--text-muted);
+}
+
+.theme-text-sub {
+  color: var(--text-sub);
+}
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 8s linear infinite;
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+}
