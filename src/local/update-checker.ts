@@ -23,9 +23,10 @@ export interface UpdateInfo {
 }
 
 function parseVersion(v: string): number[] {
-  // "v1.2.3" / "1.2.3-beta" -> [1, 2, 3]
-  const m = String(v).trim().replace(/^v/i, '').match(/(\d+)\.(\d+)\.(\d+)/);
-  return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : [];
+  // "v1.2.3" / "1.2.3-beta" / "1.0" -> [1, 2, 3]
+  const m = String(v).trim().replace(/^v/i, '').match(/(\d+)(?:\.(\d+))?(?:\.(\d+))?/);
+  if (!m) return [];
+  return [Number(m[1]), Number(m[2] || 0), Number(m[3] || 0)];
 }
 
 function isNewer(latest: string, current: string): boolean {
