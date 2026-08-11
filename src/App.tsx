@@ -477,7 +477,7 @@ export default function App() {
     >
       {/* Toast Notification Banner — top center, out of the way of the content. */}
       {toast && (
-        <div className="fixed left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-lg top-[calc(env(safe-area-inset-top,0px)+5rem)]">
+        <div className="fixed left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-lg top-[calc(env(safe-area-inset-top,0px)+8.25rem)]">
           <div
             className={`flex items-center space-x-2 px-4 py-3 rounded-2xl border shadow-2xl text-xs font-semibold ${
               toast.type === 'success'
@@ -499,7 +499,7 @@ export default function App() {
 
       {/* Update Available Banner */}
       {updateInfo && !updateDismissed && (
-        <div className="fixed left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-lg top-[calc(env(safe-area-inset-top,0px)+5rem)]">
+        <div className="fixed left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-lg top-[calc(env(safe-area-inset-top,0px)+8.25rem)]">
           <div className="flex items-center gap-3 px-4 py-3 rounded-2xl border shadow-2xl text-xs font-semibold bg-amber-50 dark:bg-amber-950 text-amber-800 dark:text-amber-200 border-amber-300 dark:border-amber-800">
             <Download className="w-4 h-4 text-amber-500 shrink-0" />
             <div className="flex-1 min-w-0">
@@ -549,6 +549,65 @@ export default function App() {
         setRequestTimeoutMs={handleSetRequestTimeout}
       />
 
+      {/* Primary page navigation — fixed directly below the top header. The
+          viewport scroll belongs to the content below, never to this row. */}
+      <nav className="flex-shrink-0 theme-bg-header border-b theme-border px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-7xl mx-auto overflow-x-auto overscroll-x-contain">
+          <div className="flex items-center gap-2 py-2.5 min-w-max">
+            <button
+              onClick={() => setActiveTab('models')}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-extrabold text-xs whitespace-nowrap border transition ${
+                activeTab === 'models'
+                  ? 'bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 border-indigo-300 dark:border-indigo-800/80 shadow-sm'
+                  : 'theme-text-muted hover:theme-text-main hover:theme-bg-subtle border-transparent'
+              }`}
+            >
+              <Cpu className="w-4 h-4" />
+              <span>Model Monitor</span>
+              <span className="font-mono text-[10px] opacity-70">{metrics?.totalModelsDiscovered ?? 0}</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-extrabold text-xs whitespace-nowrap border transition ${
+                activeTab === 'dashboard'
+                  ? 'bg-cyan-50 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 border-cyan-300 dark:border-cyan-800/80 shadow-sm'
+                  : 'theme-text-muted hover:theme-text-main hover:theme-bg-subtle border-transparent'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              <span>Endpoint Monitor</span>
+              <span className="font-mono text-[10px] opacity-70">{targets.length}</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('chat')}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-extrabold text-xs whitespace-nowrap border transition ${
+                activeTab === 'chat'
+                  ? 'bg-violet-50 dark:bg-violet-950/80 text-violet-600 dark:text-violet-400 border-violet-300 dark:border-violet-800/80 shadow-sm'
+                  : 'theme-text-muted hover:theme-text-main hover:theme-bg-subtle border-transparent'
+              }`}
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>AI Chat</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('incidents')}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-extrabold text-xs whitespace-nowrap border transition ${
+                activeTab === 'incidents'
+                  ? 'bg-rose-50 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 border-rose-300 dark:border-rose-800/80 shadow-sm'
+                  : 'theme-text-muted hover:theme-text-main hover:theme-bg-subtle border-transparent'
+              }`}
+            >
+              <ShieldAlert className="w-4 h-4" />
+              <span>Incidents</span>
+              <span className="font-mono text-[10px] opacity-70">{metrics?.downCount ?? 0}</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+
       {/* Main Container */}
       <main
         className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 min-h-0 ${
@@ -557,60 +616,22 @@ export default function App() {
             : 'py-8 space-y-8 overflow-y-auto overscroll-contain'
         }`}
       >
-        {/* Global Summary Metric Cards — hidden on chat so the conversation
-            gets the full vertical space. */}
-        {!isChatTab && <SummaryCards metrics={metrics} loading={loading} />}
-
-        {/* View Tab Switcher */}
-        <div className="flex items-center space-x-2 border-b theme-border pb-3">
-          <button
-            onClick={() => setActiveTab('models')}
-            className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition ${
-              activeTab === 'models'
-                ? 'bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 border border-indigo-300 dark:border-indigo-800/80 shadow-md'
-                : 'theme-text-muted hover:theme-text-main hover:theme-bg-subtle border border-transparent'
-            }`}
-          >
-            <Cpu className="w-4 h-4" />
-            <span>Monitored Models</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('dashboard')}
-            className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition ${
-              activeTab === 'dashboard'
-                ? 'bg-cyan-50 dark:bg-cyan-950/80 text-cyan-600 dark:text-cyan-400 border border-cyan-300 dark:border-cyan-800/80 shadow-md'
-                : 'theme-text-muted hover:theme-text-main hover:theme-bg-subtle border border-transparent'
-            }`}
-          >
-            <LayoutGrid className="w-4 h-4" />
-            <span>Monitored Endpoints ({targets.length})</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('chat')}
-            className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition ${
-              activeTab === 'chat'
-                ? 'bg-violet-50 dark:bg-violet-950/80 text-violet-600 dark:text-violet-400 border border-violet-300 dark:border-violet-800/80 shadow-md'
-                : 'theme-text-muted hover:theme-text-main hover:theme-bg-subtle border border-transparent'
-            }`}
-          >
-            <MessageSquare className="w-4 h-4" />
-            <span>AI Chat</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('incidents')}
-            className={`flex items-center space-x-2 px-4 py-2.5 rounded-xl font-extrabold text-xs transition ${
-              activeTab === 'incidents'
-                ? 'bg-rose-50 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 border border-rose-300 dark:border-rose-800/80 shadow-md'
-                : 'theme-text-muted hover:theme-text-main hover:theme-bg-subtle border border-transparent'
-            }`}
-          >
-            <ShieldAlert className="w-4 h-4" />
-            <span>Incident &amp; Error Stream</span>
-          </button>
-        </div>
+        {/* KPI overview sits below primary navigation. Chat intentionally
+            omits it so messages keep the full vertical viewport. */}
+        {!isChatTab && (
+          <section className="space-y-3">
+            <div className="flex items-end justify-between gap-3">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.2em] font-mono font-bold theme-text-muted">Dashboard</p>
+                <h2 className="text-sm font-extrabold theme-text-main">Operational Overview</h2>
+              </div>
+              <span className="text-[10px] font-mono theme-text-muted whitespace-nowrap">
+                {activeTab === 'models' ? 'Model health' : activeTab === 'dashboard' ? 'Endpoint health' : 'Incident context'}
+              </span>
+            </div>
+            <SummaryCards metrics={metrics} loading={loading} />
+          </section>
+        )}
 
         {/* Tab Content */}
         {activeTab === 'models' ? (

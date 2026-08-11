@@ -10,7 +10,7 @@ interface SummaryCardsProps {
 export const SummaryCards: React.FC<SummaryCardsProps> = ({ metrics, loading }) => {
   if (loading && !metrics) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
         {[1, 2, 3, 4, 5].map((i) => (
           <div key={i} className="theme-bg-card border theme-border rounded-2xl p-4 animate-pulse h-28" />
         ))}
@@ -32,7 +32,7 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ metrics, loading }) 
   };
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 mb-8">
+    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
       {/* 1. Overall Monitored Targets */}
       <div className="theme-bg-card border theme-border border-t-2 border-t-cyan-500 rounded-2xl p-4 shadow-sm hover:shadow-md transition relative overflow-hidden group">
         <div className="flex items-center justify-between theme-text-muted mb-2">
