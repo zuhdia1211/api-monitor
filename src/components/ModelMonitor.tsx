@@ -339,7 +339,7 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
       <div className="theme-bg-card border theme-border rounded-2xl shadow-sm transition-colors">
           {/* Column Headers — outside scroll, overflow visible for dropdowns */}
           <div className="relative z-20 overflow-visible">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-xs border-collapse table-fixed">
               <colgroup>
                 <col style={{ width: '14%' }} />
                 <col style={{ width: '22%' }} />
@@ -384,7 +384,7 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
           {/* Body — the page itself scrolls (fixed header + scrollable main),
               so no nested height cap: every model row stays reachable. */}
           <div>
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left text-xs border-collapse table-fixed">
               <colgroup>
                 <col style={{ width: '14%' }} />
                 <col style={{ width: '22%' }} />
@@ -428,12 +428,12 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
                   return (
                     <tr key={key} className="hover:theme-bg-subtle transition">
                       <td className="p-3">
-                        <span className="font-bold theme-text-main text-xs">{m.targetName}</span>
+                        <span className="font-bold theme-text-main text-xs block truncate">{m.targetName}</span>
                       </td>
                       <td className="p-3">
-                        <div className="flex items-center space-x-1.5">
+                        <div className="flex items-center space-x-1.5 min-w-0">
                           <Cpu className="w-3.5 h-3.5 text-indigo-500 flex-shrink-0" />
-                          <span className="font-mono font-bold theme-text-main text-xs">{m.modelId}</span>
+                          <span className="font-mono font-bold theme-text-main text-xs truncate block">{m.modelId}</span>
                         </div>
                       </td>
                       <td className="p-3 whitespace-nowrap">
@@ -448,13 +448,17 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
                         {isTesting ? <span className="theme-text-muted">—</span> : `${m.latencyMs} ms`}
                       </td>
 
-                      <td className="p-3 max-w-[180px]">
+                      <td className="p-3 w-[20%]">
                         {m.responseSnippet ? (
-                          <span className="text-[11px] theme-text-sub font-mono truncate block">"{m.responseSnippet}"</span>
+                          <div className="overflow-x-auto max-w-full">
+                            <span className="text-[11px] theme-text-sub font-mono whitespace-nowrap block">"{m.responseSnippet}"</span>
+                          </div>
                         ) : m.errorMessage ? (
-                          <span className="text-[11px] text-rose-600 dark:text-rose-400 font-mono truncate block" title={m.errorMessage}>
-                            {m.errorMessage.substring(0, 50)}
-                          </span>
+                          <div className="overflow-x-auto max-w-full">
+                            <span className="text-[11px] text-rose-600 dark:text-rose-400 font-mono whitespace-nowrap block" title={m.errorMessage}>
+                              {m.errorMessage}
+                            </span>
+                          </div>
                         ) : (
                           <span className="theme-text-muted text-[11px]">—</span>
                         )}
