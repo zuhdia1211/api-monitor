@@ -336,10 +336,10 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
 
       {/* Table — header and its filters stay mounted even when nothing matches,
           otherwise an over-narrow filter would hide the controls needed to undo it. */}
-      <div className="theme-bg-card border theme-border rounded-2xl shadow-sm transition-colors">
+      <div className="theme-bg-card border theme-border rounded-2xl shadow-sm transition-colors overflow-hidden">
           {/* Column Headers — outside scroll, overflow visible for dropdowns */}
           <div className="relative z-20 overflow-visible">
-            <table className="w-full text-left text-xs border-collapse table-fixed">
+            <table className="w-full text-left text-xs border-collapse table-fixed min-w-[900px]">
               <colgroup>
                 <col style={{ width: '14%' }} />
                 <col style={{ width: '22%' }} />
@@ -381,10 +381,10 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
             </table>
           </div>
 
-          {/* Body — the page itself scrolls (fixed header + scrollable main),
-              so no nested height cap: every model row stays reachable. */}
-          <div>
-            <table className="w-full text-left text-xs border-collapse table-fixed">
+          {/* Body — only the detail rows scroll horizontally, matching the
+              endpoint monitor; the header above stays put. */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse table-fixed min-w-[900px]">
               <colgroup>
                 <col style={{ width: '14%' }} />
                 <col style={{ width: '22%' }} />
@@ -448,17 +448,13 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
                         {isTesting ? <span className="theme-text-muted">—</span> : `${m.latencyMs} ms`}
                       </td>
 
-                      <td className="p-3 w-[20%]">
+                      <td className="p-3 max-w-[200px]">
                         {m.responseSnippet ? (
-                          <div className="overflow-x-auto max-w-full">
-                            <span className="text-[11px] theme-text-sub font-mono whitespace-nowrap block">"{m.responseSnippet}"</span>
-                          </div>
+                          <span className="text-[11px] theme-text-sub font-mono truncate block" title={m.responseSnippet}>"{m.responseSnippet}"</span>
                         ) : m.errorMessage ? (
-                          <div className="overflow-x-auto max-w-full">
-                            <span className="text-[11px] text-rose-600 dark:text-rose-400 font-mono whitespace-nowrap block" title={m.errorMessage}>
-                              {m.errorMessage}
-                            </span>
-                          </div>
+                          <span className="text-[11px] text-rose-600 dark:text-rose-400 font-mono truncate block" title={m.errorMessage}>
+                            {m.errorMessage.substring(0, 60)}
+                          </span>
                         ) : (
                           <span className="theme-text-muted text-[11px]">—</span>
                         )}
