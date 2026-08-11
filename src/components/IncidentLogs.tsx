@@ -128,7 +128,7 @@ export const IncidentLogs: React.FC = () => {
           <p className="text-xs theme-text-muted mt-1 font-medium">All monitored endpoints and auto-tested LLM models are healthy.</p>
         </div>
       ) : (
-        <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+        <div className="space-y-3 pr-1">
           {filteredIncidents.map((inc) => {
             const isCritical = inc.severity === 'critical';
             return (

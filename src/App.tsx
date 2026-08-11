@@ -19,6 +19,7 @@ import { ChatAgent } from './components/ChatAgent';
 import { applyThemePreset, THEME_PRESETS } from './theme';
 import { LayoutGrid, ShieldAlert, Cpu, MessageSquare, CheckCircle2, AlertCircle, Download, X } from 'lucide-react';
 import { checkForUpdate, UpdateInfo } from './local/update-checker';
+import { downloadAndInstallApk } from './local/apk-installer';
 
 export default function App() {
   const [targets, setTargets] = useState<ApiTarget[]>([]);
@@ -107,6 +108,7 @@ export default function App() {
   // In-app update banner
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
   const [updateDismissed, setUpdateDismissed] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -122,6 +124,18 @@ export default function App() {
       clearInterval(timer);
     };
   }, []);
+
+  const handleUpdateNow = async () => {
+    if (!updateInfo?.downloadUrl || updating) return;
+    setUpdating(true);
+    try {
+      await downloadAndInstallApk(updateInfo.downloadUrl);
+    } catch (err: any) {
+      showToast(`Gagal mengunduh update: ${err.message}`, 'error');
+    } finally {
+      setUpdating(false);
+    }
+  };
 
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
     setToast({ message, type });
@@ -448,9 +462,7 @@ export default function App() {
 
   return (
     <div
-      className={`theme-bg-app theme-text-main font-sans antialiased transition-colors ${
-        isChatTab ? 'h-screen flex flex-col overflow-hidden' : 'min-h-screen'
-      }`}
+      className="theme-bg-app theme-text-main font-sans antialiased transition-colors h-dvh flex flex-col overflow-hidden"
     >
       {/* Toast Notification Banner */}
       {toast && (
@@ -488,14 +500,13 @@ export default function App() {
               )}
             </div>
             {updateInfo.downloadUrl && (
-              <a
-                href={updateInfo.downloadUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-white font-bold transition"
+              <button
+                onClick={handleUpdateNow}
+                disabled={updating}
+                className="shrink-0 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-white font-bold transition disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Update
-              </a>
+                {updating ? 'Mengunduh...' : 'Update'}
+              </button>
             )}
             <button
               onClick={() => setUpdateDismissed(true)}
@@ -529,8 +540,8 @@ export default function App() {
 
       {/* Main Container */}
       <main
-        className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 ${
-          isChatTab ? 'flex-1 min-h-0 flex flex-col overflow-hidden' : ''
+        className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 flex-1 min-h-0 ${
+          isChatTab ? 'flex flex-col overflow-hidden' : 'overflow-y-auto overscroll-contain'
         }`}
       >
         {/* Global Summary Metric Cards */}

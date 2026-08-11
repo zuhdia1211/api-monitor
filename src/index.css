@@ -15,6 +15,12 @@ header.theme-bg-header {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
+/* Room for the Android gesture/navigation bar at the bottom of scrollable
+   pages, so the last row is never hidden behind it. */
+main {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+}
+
 :root,
 [data-theme="light-slate"] {
   --bg-app: #f8fafc;

@@ -381,8 +381,9 @@ export const ModelMonitor: React.FC<ModelMonitorProps> = ({ targets, onOpenChat 
             </table>
           </div>
 
-          {/* Scrollable Body */}
-          <div className="max-h-[55vh] overflow-y-auto">
+          {/* Body — the page itself scrolls (fixed header + scrollable main),
+              so no nested height cap: every model row stays reachable. */}
+          <div>
             <table className="w-full text-left text-xs border-collapse">
               <colgroup>
                 <col style={{ width: '14%' }} />
