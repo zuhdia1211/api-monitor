@@ -2,7 +2,9 @@ package dev.apimonitor.pulse;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.Settings;
 
 import androidx.core.content.FileProvider;
 
@@ -26,6 +28,32 @@ import java.net.URL;
  */
 @CapacitorPlugin(name = "ApkInstaller")
 public class ApkInstallerPlugin extends Plugin {
+
+    @PluginMethod
+    public void canRequestPackageInstalls(PluginCall call) {
+        boolean allowed;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            allowed = getContext().getPackageManager().canRequestPackageInstalls();
+        } else {
+            allowed = true; // Pre-O has no per-app install gate.
+        }
+        JSObject ret = new JSObject();
+        ret.put("allowed", allowed);
+        call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void openInstallSettings(PluginCall call) {
+        try {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
+            intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(intent);
+            call.resolve();
+        } catch (Exception e) {
+            call.reject("Could not open install settings: " + e.getMessage());
+        }
+    }
 
     @PluginMethod
     public void downloadAndInstall(PluginCall call) {

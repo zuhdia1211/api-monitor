@@ -19,7 +19,7 @@ import { ChatAgent } from './components/ChatAgent';
 import { applyThemePreset, THEME_PRESETS } from './theme';
 import { LayoutGrid, ShieldAlert, Cpu, MessageSquare, CheckCircle2, AlertCircle, Download, X } from 'lucide-react';
 import { checkForUpdate, UpdateInfo } from './local/update-checker';
-import { downloadAndInstallApk } from './local/apk-installer';
+import { downloadAndInstallApk, canInstallApks, openInstallSettings } from './local/apk-installer';
 
 export default function App() {
   const [targets, setTargets] = useState<ApiTarget[]>([]);
@@ -127,6 +127,17 @@ export default function App() {
 
   const handleUpdateNow = async () => {
     if (!updateInfo?.downloadUrl || updating) return;
+
+    // Android 8+ blocks the install intent unless this app is allowed to
+    // install unknown apps. Surface the settings screen instead of failing
+    // silently after a full APK download.
+    const canInstall = await canInstallApks();
+    if (!canInstall) {
+      showToast('Aktifkan "Izinkan dari sumber ini" untuk update', 'info');
+      openInstallSettings().catch(() => {});
+      return;
+    }
+
     setUpdating(true);
     try {
       await downloadAndInstallApk(updateInfo.downloadUrl);

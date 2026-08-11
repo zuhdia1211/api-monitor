@@ -8,9 +8,28 @@ import { nativeFetch } from './native-fetch';
 
 export interface ApkInstallerPlugin {
   downloadAndInstall(options: { url: string }): Promise<void>;
+  canRequestPackageInstalls(): Promise<{ allowed: boolean }>;
+  openInstallSettings(): Promise<void>;
 }
 
 const native = registerPlugin<ApkInstallerPlugin>('ApkInstaller');
+
+/** Whether this app is allowed to trigger the package installer dialog. */
+export async function canInstallApks(): Promise<boolean> {
+  if (!Capacitor.isNativePlatform()) return true;
+  try {
+    const { allowed } = await native.canRequestPackageInstalls();
+    return allowed;
+  } catch {
+    return true;
+  }
+}
+
+/** Opens Settings → "Install unknown apps" for this app. */
+export async function openInstallSettings(): Promise<void> {
+  if (!Capacitor.isNativePlatform()) return;
+  await native.openInstallSettings();
+}
 
 /**
  * Downloads the APK in-app and opens the Android package installer dialog.
