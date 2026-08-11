@@ -34,6 +34,7 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ targets }) => {
   const [editTitleValue, setEditTitleValue] = useState('');
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesScrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const activeSession = sessions.find(s => s.id === activeSessionId) || null;
@@ -64,7 +65,12 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ targets }) => {
   }, [activeSessionId]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const scroller = messagesScrollRef.current;
+    if (!scroller) return;
+    const frame = requestAnimationFrame(() => {
+      scroller.scrollTo({ top: scroller.scrollHeight, behavior: 'smooth' });
+    });
+    return () => cancelAnimationFrame(frame);
   }, [messages]);
 
   useEffect(() => {
@@ -429,7 +435,7 @@ export const ChatAgent: React.FC<ChatAgentProps> = ({ targets }) => {
         </div>
 
         {/* Messages — the only scrollable region on this page */}
-        <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 space-y-4">
+        <div ref={messagesScrollRef} className="flex-1 min-h-0 overflow-y-auto overscroll-contain touch-pan-y px-4 py-4 space-y-4">
           {!activeSession && (
             <div className="flex flex-col items-center justify-center h-full space-y-3 theme-text-muted">
               <MessageSquare className="w-12 h-12 opacity-30" />

@@ -551,12 +551,15 @@ export default function App() {
 
       {/* Main Container */}
       <main
-        className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 flex-1 min-h-0 ${
-          isChatTab ? 'flex flex-col overflow-hidden' : 'overflow-y-auto overscroll-contain'
+        className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 min-h-0 ${
+          isChatTab
+            ? 'py-4 space-y-4 flex flex-col overflow-hidden'
+            : 'py-8 space-y-8 overflow-y-auto overscroll-contain'
         }`}
       >
-        {/* Global Summary Metric Cards */}
-        <SummaryCards metrics={metrics} loading={loading} />
+        {/* Global Summary Metric Cards — hidden on chat so the conversation
+            gets the full vertical space. */}
+        {!isChatTab && <SummaryCards metrics={metrics} loading={loading} />}
 
         {/* View Tab Switcher */}
         <div className="flex items-center space-x-2 border-b theme-border pb-3">
