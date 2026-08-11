@@ -13,5 +13,9 @@ android/.gradle/
 android/capacitor-cordova-android-plugins/build/
 android/local.properties
 
+# Release signing key — keep private. Losing it breaks future updates.
+android/*.jks
+android/keystore.properties
+
 *.log
 .DS_Store
