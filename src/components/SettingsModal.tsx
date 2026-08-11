@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { X, Bell, Send, CheckCircle2, AlertTriangle, Loader2, ShieldCheck, Coins, Download } from 'lucide-react';
 import { openInstallSettings, canInstallApks } from '../local/apk-installer';
+import { checkForUpdate, UpdateInfo } from '../local/update-checker';
+import { App as CapacitorApp } from '@capacitor/app';
 import { AppSettings, WebhookTestResult } from '../types';
 
 interface SettingsModalProps {
@@ -22,6 +24,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
   const [testing, setTesting] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [installPermNote, setInstallPermNote] = useState<string | null>(null);
+  const [updateCheckState, setUpdateCheckState] = useState<'idle' | 'checking' | 'done'>('idle');
+  const [updateCheckResult, setUpdateCheckResult] = useState<UpdateInfo | null>(null);
+  const [currentVersion, setCurrentVersion] = useState('');
   const [testResult, setTestResult] = useState<WebhookTestResult | null>(null);
   const modalRef = React.useRef<HTMLDivElement>(null);
 
@@ -31,6 +36,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
       // Always open scrolled to the very top so the header (safe-area padded)
       // is visible and nothing starts mid-form.
       modalRef.current?.scrollTo({ top: 0 });
+      CapacitorApp.getInfo()
+        .then((info) => setCurrentVersion(info.version || ''))
+        .catch(() => {});
     }
   }, [isOpen]);
 
@@ -242,6 +250,41 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
                 Kosongkan untuk menonaktifkan.
               </p>
             </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                disabled={updateCheckState === 'checking'}
+                onClick={async () => {
+                  setUpdateCheckState('checking');
+                  setUpdateCheckResult(null);
+                  const info = await checkForUpdate();
+                  setUpdateCheckResult(info);
+                  setUpdateCheckState('done');
+                }}
+                className="px-3.5 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-xs font-bold transition shadow-md disabled:opacity-60"
+              >
+                {updateCheckState === 'checking' ? 'Memeriksa...' : 'Cek update sekarang'}
+              </button>
+              {currentVersion && (
+                <span className="text-[10px] theme-text-muted font-mono">
+                  Versi terpasang: {currentVersion}
+                </span>
+              )}
+            </div>
+            {updateCheckState === 'done' && updateCheckResult && (
+              <div
+                className={`px-3 py-2 rounded-lg text-[11px] font-semibold border ${
+                  updateCheckResult.available
+                    ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-700 dark:text-amber-300'
+                    : 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
+                }`}
+              >
+                {updateCheckResult.available
+                  ? `Update tersedia: v${updateCheckResult.latestVersion} — tutup settings lalu klik banner "Update".`
+                  : `Sudah versi terbaru${updateCheckResult.latestVersion ? ` (v${updateCheckResult.latestVersion})` : ''}.`}
+              </div>
+            )}
 
             <div className="flex flex-wrap items-center gap-2">
               <button
