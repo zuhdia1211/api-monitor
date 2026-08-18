@@ -110,27 +110,22 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="theme-bg-header border-b theme-border sticky top-0 z-30 backdrop-blur-md transition-colors theme-text-main">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-0 sm:h-16 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         {/* Brand */}
-        <div className="flex items-center space-x-3.5 min-w-0">
+        <div className="flex items-center space-x-3 min-w-0">
           <div className="p-2 theme-bg-subtle border theme-border rounded-xl relative group shadow-sm flex-shrink-0">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-300" />
             <Activity className="w-5 h-5 text-cyan-500 relative z-10" />
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h1 className="font-extrabold theme-text-main text-base tracking-tight truncate">
-                API <span className="text-cyan-500">&amp;</span> LLM Pulse
-              </h1>
-            </div>
-            <p className="text-[11px] theme-text-muted hidden sm:block font-medium">
-              Real-time API Health Monitoring &amp; LLM Diagnostics
-            </p>
+            <h1 className="font-extrabold theme-text-main text-sm sm:text-base tracking-tight truncate">
+              API <span className="text-cyan-500">&amp;</span> LLM Pulse
+            </h1>
           </div>
         </div>
 
         {/* Action Controls */}
-        <div className="relative flex items-center space-x-1.5 sm:space-x-3 flex-nowrap min-w-0">
+        <div className="relative flex items-center justify-end gap-1 sm:gap-2 flex-wrap min-w-0">
           {/* Theme Preset Selector Dropdown */}
           <div className="flex-shrink-0" ref={themeMenuRef}>
             <button

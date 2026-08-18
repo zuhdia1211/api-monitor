@@ -287,12 +287,27 @@ async function route(
 
   // ---- WeizeRouter -------------------------------------------------------
   if (a === 'weizerouter' && b === 'usage' && method === 'GET') {
-    const settings = await getSettings();
-    const portalId = settings.weizeRouterPortalId;
+    const targetId = query.get('targetId') || undefined;
+    let portalId: string | undefined;
+    let baseUrl: string | undefined;
+
+    if (targetId) {
+      const target = await findTarget(targetId);
+      portalId = target?.weizeRouterPortalId;
+      baseUrl = target?.weizeRouterBaseUrl;
+    }
+
+    if (!portalId) {
+      const settings = await getSettings();
+      portalId = settings.weizeRouterPortalId;
+      baseUrl = baseUrl || settings.weizeRouterBaseUrl;
+    }
+
     if (!portalId) return badRequest('WeizeRouter Portal ID belum dikonfigurasi. Tambahkan di Settings.');
     const page = query.get('page') || '1';
     const pageSize = query.get('page_size') || '50';
-    const url = `https://weizerouter.web.id/portal/data?id=${encodeURIComponent(portalId)}&page=${page}&page_size=${pageSize}`;
+    const resolvedBaseUrl = (baseUrl || 'https://weizerouter.web.id').replace(/\/+$/, '');
+    const url = `${resolvedBaseUrl}/portal/data?id=${encodeURIComponent(portalId)}&page=${page}&page_size=${pageSize}`;
     try {
       const res = await nativeFetch(url, { timeoutMs: 15000 });
       if (!res.ok) return { status: res.status, body: { error: `WeizeRouter API returned ${res.status}` } };

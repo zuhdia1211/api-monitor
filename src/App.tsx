@@ -616,20 +616,31 @@ export default function App() {
             : 'py-8 space-y-8 overflow-y-auto overscroll-contain'
         }`}
       >
-        {/* KPI overview sits below primary navigation. Chat intentionally
-            omits it so messages keep the full vertical viewport. */}
-        {!isChatTab && (
+        {/* KPI overview sits below primary navigation. Chat and incidents
+            omit it so content keeps the full vertical viewport. */}
+        {activeTab === 'models' && (
+          <section className="space-y-3">
+            <div className="flex items-end justify-between gap-3">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.2em] font-mono font-bold theme-text-muted">Model Overview</p>
+                <h2 className="text-sm font-extrabold theme-text-main">Model Health Summary</h2>
+              </div>
+              <span className="text-[10px] font-mono theme-text-muted whitespace-nowrap">Per-model diagnostics</span>
+            </div>
+            <SummaryCards metrics={metrics} loading={loading} variant="models" />
+          </section>
+        )}
+
+        {activeTab === 'dashboard' && (
           <section className="space-y-3">
             <div className="flex items-end justify-between gap-3">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.2em] font-mono font-bold theme-text-muted">Dashboard</p>
-                <h2 className="text-sm font-extrabold theme-text-main">Operational Overview</h2>
+                <h2 className="text-sm font-extrabold theme-text-main">Endpoint Operational Overview</h2>
               </div>
-              <span className="text-[10px] font-mono theme-text-muted whitespace-nowrap">
-                {activeTab === 'models' ? 'Model health' : activeTab === 'dashboard' ? 'Endpoint health' : 'Incident context'}
-              </span>
+              <span className="text-[10px] font-mono theme-text-muted whitespace-nowrap">Endpoint health</span>
             </div>
-            <SummaryCards metrics={metrics} loading={loading} />
+            <SummaryCards metrics={metrics} loading={loading} variant="endpoints" />
           </section>
         )}
 

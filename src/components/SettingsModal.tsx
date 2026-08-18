@@ -104,8 +104,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
   if (!isOpen) return null;
 
   return (
-    <div ref={modalRef} className="fixed inset-0 z-50 flex justify-center items-start bg-black/60 backdrop-blur-sm p-4 pt-[calc(env(safe-area-inset-top,0px)+2rem)] overflow-y-auto">
-      <div className="theme-bg-card border theme-border rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden theme-text-main my-8 transition-colors">
+    <div ref={modalRef} className="fixed inset-0 z-50 flex justify-center items-start bg-black/60 backdrop-blur-sm p-4 pt-[calc(env(safe-area-inset-top,0px)+4.5rem)] overflow-y-auto">
+      <div className="theme-bg-card border theme-border rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden theme-text-main my-4 max-h-[calc(100dvh-12rem)] flex flex-col transition-colors">
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b theme-border theme-bg-subtle">
           <div className="flex items-center gap-3">
@@ -126,7 +126,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
         </div>
 
         {/* Modal Body Form */}
-        <form onSubmit={handleSave} className="p-6 space-y-6 text-xs">
+        <form onSubmit={handleSave} className="p-6 space-y-6 text-xs overflow-y-auto flex-1">
           {/* Master Enable Alert Toggle */}
           <div className="flex items-center justify-between p-4 rounded-xl theme-bg-subtle border theme-border">
             <div>
@@ -359,6 +359,22 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
             <h3 className="text-xs font-bold text-amber-500 uppercase tracking-wider flex items-center gap-2">
               <Coins className="w-4 h-4" /> WeizeRouter Token Portal
             </h3>
+
+            <div>
+              <label className="block text-xs font-bold theme-text-main mb-1.5">Base URL</label>
+              <input
+                type="text"
+                placeholder="https://weizerouter.web.id"
+                value={(settings as any).weizeRouterBaseUrl || ''}
+                onChange={(e) => setSettings({ ...settings, weizeRouterBaseUrl: e.target.value } as any)}
+                autoComplete="off"
+                spellCheck={false}
+                className="w-full theme-bg-input border theme-border rounded-xl px-3.5 py-2.5 text-xs theme-text-main placeholder:theme-text-muted focus:outline-none focus:border-amber-500 font-mono select-text"
+              />
+              <p className="text-[10px] theme-text-muted mt-1">
+                URL dasar WeizeRouter. Kosongkan untuk default (https://weizerouter.web.id).
+              </p>
+            </div>
 
             <div>
               <label className="block text-xs font-bold theme-text-main mb-1.5">Portal ID</label>

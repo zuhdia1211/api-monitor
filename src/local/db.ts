@@ -189,9 +189,12 @@ async function migrate(conn: SQLiteDBConnection) {
   };
 
   await ensureColumn('targets', 'provider', `TEXT NOT NULL DEFAULT 'openai-compatible'`);
+  await ensureColumn('targets', 'weizerouter_portal_id', `TEXT DEFAULT ''`);
+  await ensureColumn('targets', 'weizerouter_base_url', `TEXT DEFAULT ''`);
   await ensureColumn('settings', 'auto_refresh_interval', 'INTEGER DEFAULT 30');
   await ensureColumn('settings', 'request_timeout_ms', 'INTEGER DEFAULT 10000');
   await ensureColumn('settings', 'weizerouter_portal_id', `TEXT DEFAULT ''`);
+  await ensureColumn('settings', 'weizerouter_base_url', `TEXT DEFAULT ''`);
   await ensureColumn('settings', 'update_check_url', `TEXT DEFAULT ''`);
 }
 

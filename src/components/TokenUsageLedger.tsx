@@ -29,7 +29,7 @@ function getSortValue(entry: WeizeRouterUsageEntry, key: SortKey): number | stri
   }
 }
 
-export const TokenUsageLedger: React.FC = () => {
+export const TokenUsageLedger: React.FC<{ targetId?: string }> = ({ targetId }) => {
   const [data, setData] = useState<WeizeRouterData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +43,9 @@ export const TokenUsageLedger: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/weizerouter/usage?page=1&page_size=200');
+      const params = new URLSearchParams({ page: '1', page_size: '200' });
+      if (targetId) params.set('targetId', targetId);
+      const res = await fetch(`/api/weizerouter/usage?${params.toString()}`);
       if (!res.ok) {
         const err = await res.json();
         setError(err.error || 'Gagal mengambil data');

@@ -170,6 +170,9 @@ export interface ApiTarget {
   lastCheckedAt?: string;
   uptimePercent?: number;
   avgLatencyMs?: number;
+  /** Per-endpoint WeizeRouter portal config. Overrides global settings. */
+  weizeRouterPortalId?: string;
+  weizeRouterBaseUrl?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -216,6 +219,8 @@ export interface AppSettings {
   requestTimeoutMs?: number;
   /** WeizeRouter portal token for fetching token usage data. */
   weizeRouterPortalId?: string;
+  /** Base URL for WeizeRouter API. Defaults to https://weizerouter.web.id if empty. */
+  weizeRouterBaseUrl?: string;
   /**
    * URL of a hosted version.json for in-app update checks, e.g.
    * `https://example.com/api-pulse/version.json` returning

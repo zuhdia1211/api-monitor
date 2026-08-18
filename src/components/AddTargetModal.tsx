@@ -34,6 +34,8 @@ export const AddTargetModal: React.FC<AddTargetModalProps> = ({
   const [showApiKey, setShowApiKey] = useState(false);
   const [testPrompt, setTestPrompt] = useState('ping');
   const [maxTokens, setMaxTokens] = useState(5);
+  const [weizeRouterPortalId, setWeizeRouterPortalId] = useState('');
+  const [weizeRouterBaseUrl, setWeizeRouterBaseUrl] = useState('');
 
   const [isDiscovering, setIsDiscovering] = useState(false);
   const [discoveryResult, setDiscoveryResult] = useState<any | null>(null);
@@ -60,6 +62,8 @@ export const AddTargetModal: React.FC<AddTargetModalProps> = ({
       setApiKey(editingTarget.apiKey || '');
       setTestPrompt(editingTarget.testPrompt || 'ping');
       setMaxTokens(editingTarget.maxTokens || 5);
+      setWeizeRouterPortalId(editingTarget.weizeRouterPortalId || '');
+      setWeizeRouterBaseUrl(editingTarget.weizeRouterBaseUrl || '');
     } else {
       setName('');
       setEnabled(true);
@@ -68,6 +72,8 @@ export const AddTargetModal: React.FC<AddTargetModalProps> = ({
       setApiKey('');
       setTestPrompt('ping');
       setMaxTokens(5);
+      setWeizeRouterPortalId('');
+      setWeizeRouterBaseUrl('');
       setDiscoveryResult(null);
       setDiscoveryError(null);
       setFormError(null);
@@ -147,6 +153,8 @@ export const AddTargetModal: React.FC<AddTargetModalProps> = ({
         autoDiscoverModels: true,
         testPrompt: testPrompt.trim() || 'ping',
         maxTokens: Number(maxTokens) || 5,
+        weizeRouterPortalId: weizeRouterPortalId.trim() || undefined,
+        weizeRouterBaseUrl: weizeRouterBaseUrl.trim() || undefined,
       };
 
       await onSave(payload);
@@ -290,6 +298,34 @@ export const AddTargetModal: React.FC<AddTargetModalProps> = ({
                   onChange={(e) => setMaxTokens(Number(e.target.value))}
                   className="w-full theme-bg-input border theme-border rounded-xl px-3 py-2 theme-text-main font-mono focus:outline-none focus:border-indigo-500"
                 />
+              </div>
+            </div>
+
+            {/* WeizeRouter Token Portal (per-endpoint) */}
+            <div className="border-t theme-border pt-4">
+              <label className="block font-bold theme-text-main mb-2">WeizeRouter Token Portal (Opsional)</label>
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-xs font-bold theme-text-main mb-1">Portal ID</label>
+                  <input
+                    type="text"
+                    placeholder="df9670a96396c0034d46a806becb5670..."
+                    value={weizeRouterPortalId}
+                    onChange={(e) => setWeizeRouterPortalId(e.target.value)}
+                    className="w-full theme-bg-input border theme-border rounded-xl px-3.5 py-2.5 text-xs theme-text-main font-mono placeholder:theme-text-muted focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold theme-text-main mb-1">Base URL</label>
+                  <input
+                    type="text"
+                    placeholder="https://weizerouter.web.id"
+                    value={weizeRouterBaseUrl}
+                    onChange={(e) => setWeizeRouterBaseUrl(e.target.value)}
+                    className="w-full theme-bg-input border theme-border rounded-xl px-3.5 py-2.5 text-xs theme-text-main font-mono placeholder:theme-text-muted focus:outline-none focus:border-amber-500"
+                  />
+                  <p className="text-[10px] theme-text-muted mt-1">Kosongkan untuk pakai default global di Settings.</p>
+                </div>
               </div>
             </div>
 

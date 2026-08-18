@@ -205,7 +205,7 @@ export const TargetDetailModal: React.FC<TargetDetailModalProps> = ({ target, on
               </div>
 
               {/* Token Usage Ledger — WeizeRouter */}
-              <TokenUsageLedger />
+              <TokenUsageLedger targetId={target.id} />
 
             </div>
           )}

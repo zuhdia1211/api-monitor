@@ -18,7 +18,12 @@ header.theme-bg-header {
 /* Room for the Android gesture/navigation bar at the bottom of scrollable
    pages, so the last row is never hidden behind it. */
 main {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1.5rem);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem);
+}
+
+/* Footer / bottom spacing for all scrollable containers */
+.overflow-y-auto {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 :root,

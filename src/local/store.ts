@@ -42,6 +42,8 @@ function rowToTarget(row: any): ApiTarget {
     lastCheckedAt: row.last_checked_at || undefined,
     uptimePercent: row.uptime_percent ?? undefined,
     avgLatencyMs: row.avg_latency_ms ?? undefined,
+    weizeRouterPortalId: row.weizerouter_portal_id || undefined,
+    weizeRouterBaseUrl: row.weizerouter_base_url || undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -87,8 +89,9 @@ export async function saveTarget(target: ApiTarget): Promise<ApiTarget> {
   await run(
     `INSERT OR REPLACE INTO targets (id, name, type, provider, enabled, base_url, url, api_key,
       auto_discover_models, test_prompt, max_tokens, check_interval_seconds, timeout_ms,
-      last_check_result_json, last_checked_at, uptime_percent, avg_latency_ms, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      last_check_result_json, last_checked_at, uptime_percent, avg_latency_ms,
+      weizerouter_portal_id, weizerouter_base_url, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       target.id, target.name, target.type || 'openai',
       target.provider || 'openai-compatible', target.enabled ? 1 : 0,
@@ -98,6 +101,7 @@ export async function saveTarget(target: ApiTarget): Promise<ApiTarget> {
       target.checkIntervalSeconds ?? 60, target.timeoutMs ?? 10000,
       target.lastCheckResult ? JSON.stringify(target.lastCheckResult) : null,
       target.lastCheckedAt || null, target.uptimePercent ?? null, target.avgLatencyMs ?? null,
+      target.weizeRouterPortalId || null, target.weizeRouterBaseUrl || null,
       target.createdAt || now, target.updatedAt,
     ]
   );
@@ -219,6 +223,7 @@ export async function getSettings(): Promise<AppSettings> {
     autoRefreshInterval: row.auto_refresh_interval ?? 30,
     requestTimeoutMs: row.request_timeout_ms ?? 10000,
     weizeRouterPortalId: row.weizerouter_portal_id || '',
+    weizeRouterBaseUrl: row.weizerouter_base_url || '',
     updateCheckUrl: row.update_check_url || '',
   };
 }
@@ -228,7 +233,7 @@ export async function saveSettings(settings: AppSettings): Promise<AppSettings> 
     `UPDATE settings SET enable_alerts = ?, webhook_url = ?, webhook_format = ?,
        telegram_bot_token = ?, telegram_chat_id = ?, alert_cooldown_minutes = ?,
        auto_refresh_interval = ?, request_timeout_ms = ?, weizerouter_portal_id = ?,
-       update_check_url = ?
+       weizerouter_base_url = ?, update_check_url = ?
      WHERE id = 1`,
     [
       settings.enableAlerts ? 1 : 0, settings.webhookUrl || '',
@@ -236,6 +241,7 @@ export async function saveSettings(settings: AppSettings): Promise<AppSettings> 
       settings.telegramChatId || '', settings.alertCooldownMinutes || 10,
       settings.autoRefreshInterval ?? 30, settings.requestTimeoutMs ?? 10000,
       settings.weizeRouterPortalId || '',
+      settings.weizeRouterBaseUrl || '',
       settings.updateCheckUrl || '',
     ]
   );
